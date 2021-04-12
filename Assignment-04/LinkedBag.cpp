@@ -43,7 +43,7 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 		newChainPtr->setNext(nullptr);
 	}
 }
-
+ 
 template<typename ItemType>
 LinkedBag<ItemType>::~LinkedBag() {
 	clear();
