@@ -153,6 +153,5 @@ Node<ItemType>* LinkedBag<ItemType>::getPointerTo(const ItemType& anEntry) const
 			curPtr = curPtr->getNext();
 		}
 	}
-
 	return curPtr;
 } 

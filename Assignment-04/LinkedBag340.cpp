@@ -3,16 +3,20 @@
 //Contributors: Cody Huang, Faiyaz Chaudhury
 //4/12/2021
 #include "LinkedBag.h"
-#include "Include.h"
+#include <ctime>
+#include <stdio.h>
+#include <stdlib.h>
+
 //function that replaces the content of the second node with head and deletes head
 template<typename ItemType>
 bool LinkedBag<ItemType>::removeSecondNode340(){
     //puts all items into a vector
-    vector v = this.toVector();
+    std::vector<ItemType> v = this->toVector();
     //get the second item in the vector
     ItemType target = v[1];
     //use remove() to remove second item
-    this.remove(v[1]);
+    this->remove(v[1]);
+    return true;
 }
 
 //function adds a new node with data = newEntry to the last node of the link
@@ -60,24 +64,23 @@ int LinkedBag<ItemType>::getCurrentSize340RecursiveHelper(Node<ItemType>* cur) c
 }
 
 //get the current size recursively without a helper
-//static pointer to keep track of current node because this function doesn't take in arguements
-//TODO FIX THIS
-static Node<ItemType>* cur = headPtr;
 template<typename ItemType>
 int LinkedBag<ItemType>::getCurrentSize340RecursiveNoHelper() const {
-    if(cur == nullptr) {
-        return 1;
-    } else {
-        cur = cur.getNext();
+    static Node<ItemType>* cur = headPtr;
+    if(cur->getNext()!=nullptr) {
+        cur=cur->getNext();
         return 1 + getCurrentSize340RecursiveNoHelper();
+    } else {
+        return 0;
     }
+
 }
 
 //get the frequency of an item recursively
 template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf340Recursive(const ItemType& entry) const {
     Node<ItemType>* cur = headPtr;
-    return getFrequencyOf340RecursiveHelper(cur);
+    return getFrequencyOf340RecursiveHelper(cur, entry);
 }
 
 //helper for getFrequencyOf340()
@@ -96,7 +99,7 @@ int LinkedBag<ItemType>::getFrequencyOf340RecursiveHelper(Node<ItemType>* curren
         return 1 + getFrequencyOf340RecursiveHelper(current->getNext(),entry);
     }
     //recursive case if item doesn't match entry
-    else if(current->getNext!=nullptr && current->getItem()!=entry) {
+    else if(current->getNext()!=nullptr && current->getItem()!=entry) {
         return 0 + getFrequencyOf340RecursiveHelper(current->getNext(),entry);
     }
 }
@@ -104,17 +107,33 @@ int LinkedBag<ItemType>::getFrequencyOf340RecursiveHelper(Node<ItemType>* curren
 //get the frequency of an item recursively without helper
 template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf340RecursiveNoHelper(const ItemType& entry) const {
-
+    //create a static node pointer to iterate through nodes in recursion
+    static Node<ItemType>* cur = headPtr;
+    //base case if current node pointer is nullptr then there is nothing to return
+    if(cur==nullptr) {
+        return 0;
+    }
+    //if the entry matches add one to the recursive call
+    else if(cur->getItem()==entry) {
+        cur = cur->getNext();
+        return 1 + getFrequencyOf340RecursiveNoHelper(entry);
+    } 
+    //if entry doesn't match recursive call without adding 1
+    else {
+        cur = cur->getNext();
+        return getFrequencyOf340RecursiveNoHelper(entry);
+    }
 }
 
 //remove random item from bag
 template<typename ItemType>
 ItemType LinkedBag<ItemType>::removeRandom340() {
     //use toVector to put all items into a vector
-    std::vector<ItemType> v = this.toVector();
+    std::vector<ItemType> v = this->toVector();
     //generate a random numer between 0 and v.size
-    std::srand(time(NULL));
-    int randomNum = rand%v.size();
+    srand((unsigned)time(NULL));
+    int randomNum = rand()%v.size();
     //pick a random number in the vector and use the remove function to remove it from bag
-    this.remove(v[randomNum]);
+    this->remove(v[randomNum]);
+    return v[randomNum];
 }
