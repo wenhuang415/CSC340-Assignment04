@@ -6,6 +6,7 @@
 #include <ctime>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 //function that replaces the content of the second node with head and deletes head
 template<typename ItemType>
@@ -37,6 +38,7 @@ bool LinkedBag<ItemType>::addEnd340(const ItemType& newEntry){
 //gets the current size of the bag iteratively
 template<typename ItemType>
 int LinkedBag<ItemType>::getCurrentSize340Iterative() const {
+    std::cout <<"huhu";
     int count = 1;
     Node<ItemType>* cur = headPtr;
     //if head is null return 0 because bag is empty

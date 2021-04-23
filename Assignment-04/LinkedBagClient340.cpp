@@ -2,7 +2,6 @@
 //	Created by: Duc Ta
 
 #include "Include.h"
-using namespace std;
 //
 //
 // PLEASE DO NOT CHANGE THIS FILE
