@@ -38,14 +38,18 @@ bool LinkedBag<ItemType>::addEnd340(const ItemType& newEntry){
 //gets the current size of the bag iteratively
 template<typename ItemType>
 int LinkedBag<ItemType>::getCurrentSize340Iterative() const {
-    std::cout <<"huhu";
+    
     int count = 1;
     Node<ItemType>* cur = headPtr;
     //if head is null return 0 because bag is empty
     if(cur==nullptr) return 0;
     //iterate through all the nodes and increment count if nextNode exists
-    while(cur->getNext()!=nullptr) count++;
+    while(cur->getNext()!=nullptr){
+        count++;
+        cur=cur->getNext();
+    } 
     return count;
+
 }
 
 //gets the current size recursivly
@@ -73,7 +77,7 @@ int LinkedBag<ItemType>::getCurrentSize340RecursiveNoHelper() const {
         cur=cur->getNext();
         return 1 + getCurrentSize340RecursiveNoHelper();
     } else {
-        return 0;
+        return 1;
     }
 
 }
@@ -111,19 +115,14 @@ template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf340RecursiveNoHelper(const ItemType& entry) const {
     //create a static node pointer to iterate through nodes in recursion
     static Node<ItemType>* cur = headPtr;
-    //base case if current node pointer is nullptr then there is nothing to return
-    if(cur==nullptr) {
-        return 0;
-    }
-    //if the entry matches add one to the recursive call
-    else if(cur->getItem()==entry) {
+    if(cur->getNext()!=nullptr && entry==cur->getItem()) {
         cur = cur->getNext();
         return 1 + getFrequencyOf340RecursiveNoHelper(entry);
-    } 
-    //if entry doesn't match recursive call without adding 1
-    else {
+    } else if(cur->getNext()!=nullptr && entry!=cur->getItem()) {
         cur = cur->getNext();
         return getFrequencyOf340RecursiveNoHelper(entry);
+    } else {
+        return NULL;
     }
 }
 
