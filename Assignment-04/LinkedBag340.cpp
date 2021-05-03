@@ -7,7 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-
+#include <string>
+#include <memory>
+using namespace std;
 //function that replaces the content of the second node with head and deletes head
 template<typename ItemType>
 bool LinkedBag<ItemType>::removeSecondNode340(){
@@ -91,22 +93,16 @@ int LinkedBag<ItemType>::getFrequencyOf340Recursive(const ItemType& entry) const
 
 //helper for getFrequencyOf340()
 template<typename ItemType>
-int LinkedBag<ItemType>::getFrequencyOf340RecursiveHelper(Node<ItemType>* current, const ItemType& entry) const {
+int LinkedBag<ItemType>::getFrequencyOf340RecursiveHelper(Node<ItemType>* cur, const ItemType& entry) const {
     //base case if last item matches entry
-    if(current->getNext()==nullptr && current->getItem()==entry) {
-        return 1;
-    } 
-    //base case if last item does not match entry
-    else if(current->getNext()==nullptr && current->getItem()!=entry) {
-        return 0;
-    }
-    //recursive case if item matches entry
-    else if(current->getNext()!=nullptr && current->getItem()==entry) {
-        return 1 + getFrequencyOf340RecursiveHelper(current->getNext(),entry);
-    }
-    //recursive case if item doesn't match entry
-    else if(current->getNext()!=nullptr && current->getItem()!=entry) {
-        return 0 + getFrequencyOf340RecursiveHelper(current->getNext(),entry);
+    if(cur->getNext()==nullptr) {
+       return (cur->getItem()==entry) ? 1 : 0;
+    } else {
+        if(cur->getItem()==entry) {
+            return 1+getFrequencyOf340RecursiveHelper(cur->getNext(),entry);
+        } else {
+            return getFrequencyOf340RecursiveHelper(cur->getNext(),entry);
+        }
     }
 }
 
@@ -114,15 +110,20 @@ int LinkedBag<ItemType>::getFrequencyOf340RecursiveHelper(Node<ItemType>* curren
 template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf340RecursiveNoHelper(const ItemType& entry) const {
     //create a static node pointer to iterate through nodes in recursion
-    static Node<ItemType>* cur = headPtr;
-    if(cur->getNext()!=nullptr && entry==cur->getItem()) {
-        cur = cur->getNext();
-        return 1 + getFrequencyOf340RecursiveNoHelper(entry);
-    } else if(cur->getNext()!=nullptr && entry!=cur->getItem()) {
-        cur = cur->getNext();
-        return getFrequencyOf340RecursiveNoHelper(entry);
-    } else {
-        return NULL;
+    static Node<ItemType>* cur;
+    static int count = 0;
+    if (cur == nullptr) {
+        return count;
+    }
+    else {
+        if (entry == cur->getItem()) {
+            count++;
+        }
+        if(cur->getNext()!=nullptr) {
+            cur = cur->getNext();
+            getFrequencyOf340RecursiveNoHelper(entry);
+        }
+        return count;
     }
 }
 
