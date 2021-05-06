@@ -26,7 +26,7 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 	}
 	else {
 		shared_ptr<ItemType> headptr {headPtr->setItem(origChainPtr->getItem())};
-		
+
 
 		shared_ptr<ItemType> newChainPtr = headPtr; 
 		origChainPtr = origChainPtr->getNext();
@@ -34,7 +34,7 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 		while (origChainPtr != nullptr)
 		{
 			ItemType nextItem = origChainPtr->getItem();
-			auto_ptr<ItemType> newNodePtr {nextItem}
+			unique_ptr<ItemType> newNodePtr {nextItem}
 			newChainPtr->setNext(newNodePtr);
 			newChainPtr = newChainPtr->getNext();
 			origChainPtr = origChainPtr->getNext();
