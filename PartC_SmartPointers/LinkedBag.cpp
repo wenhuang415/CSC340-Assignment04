@@ -25,7 +25,7 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 		headPtr = nullptr; 
 	}
 	else {
-		headPtr = new Node<ItemType>();
+		weak_ptr<ItemType> headptr;
 		headPtr->setItem(origChainPtr->getItem());
 
 		Node<ItemType>* newChainPtr = headPtr; 
@@ -34,7 +34,7 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 		while (origChainPtr != nullptr)
 		{
 			ItemType nextItem = origChainPtr->getItem();
-			Node<ItemType>* newNodePtr = new Node<ItemType>(nextItem);
+			auto_ptr<ItemType> newNodePtr {nextItem}
 			newChainPtr->setNext(newNodePtr);
 			newChainPtr = newChainPtr->getNext();
 			origChainPtr = origChainPtr->getNext();
@@ -46,6 +46,7 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
  
 template<typename ItemType>
 LinkedBag<ItemType>::~LinkedBag() {
+	cout << "Destructor called: " << this;
 	clear();
 } 
 
@@ -61,7 +62,7 @@ int LinkedBag<ItemType>::getCurrentSize() const {
 
 template<typename ItemType>
 bool LinkedBag<ItemType>::add(const ItemType& newEntry) {
-	Node<ItemType>* nextNodePtr = new Node<ItemType>();
+	unique_ptr<ItemType> nextNodePtr;
 	nextNodePtr->setItem(newEntry);
 	nextNodePtr->setNext(headPtr);  
 	headPtr = nextNodePtr;
@@ -72,7 +73,7 @@ bool LinkedBag<ItemType>::add(const ItemType& newEntry) {
 template<typename ItemType>
 std::vector<ItemType> LinkedBag<ItemType>::toVector() const {
 	std::vector<ItemType> bagContents;
-	Node<ItemType>* curPtr = headPtr;
+	unique_ptr<ItemType> curPtr = make_unique(headPtr);
 	int counter = 0;
 
 	while ((curPtr != nullptr) && (counter < itemCount)) {
@@ -122,7 +123,7 @@ template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf(const ItemType& anEntry) const {
 	int frequency = 0;
 	int counter = 0;
-	Node<ItemType>* curPtr = headPtr;
+	unique_ptr<ItemType> curPtr = make_unique(headPtr);
 
 	while ((curPtr != nullptr) && (counter < itemCount)) {
 		if (anEntry == curPtr->getItem()) {
@@ -143,7 +144,7 @@ bool LinkedBag<ItemType>::contains(const ItemType& anEntry) const {
 template<typename ItemType>
 Node<ItemType>* LinkedBag<ItemType>::getPointerTo(const ItemType& anEntry) const {
 	bool found = false;
-	Node<ItemType>* curPtr = headPtr;
+	unique_ptr<ItemType> curPtr = make_unique(headPtr);
 
 	while (!found && (curPtr != nullptr)) {
 		if (anEntry == curPtr->getItem()) {
