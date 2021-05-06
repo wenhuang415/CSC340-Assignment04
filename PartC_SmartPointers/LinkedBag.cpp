@@ -1,7 +1,7 @@
 //  LinkedBag.cpp
-//  Created by Frank M. Carrano and Timothy M. Henry.
+//  Created by Frank M. Carrano and Timothy M. Henry.
 //	Updated by Duc Ta
-//  Copyright (c) 2017 Pearson Education, Hoboken, New Jersey.
+//  Copyright (c) 2017 Pearson Education, Hoboken, New Jersey.
 
 #include <cstddef>
 #include "Node.h"
@@ -12,7 +12,7 @@
 // PLEASE DO NOT CHANGE THIS FILE
 //
 //
-
+using namespace std;
 template<typename ItemType>
 LinkedBag<ItemType>::LinkedBag() : headPtr(nullptr), itemCount(0) {}
 
@@ -25,7 +25,12 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 		headPtr = nullptr; 
 	}
 	else {
+<<<<<<< HEAD
 		shared_ptr<ItemType> headptr {headPtr->setItem(origChainPtr->getItem())};
+=======
+		headPtr = new Node<ItemType>();
+		headPtr->setItem(origChainPtr->getItem());
+>>>>>>> 2a46b3db71acdf75ec3b3d97e8043475b5725c2c
 
 
 		shared_ptr<ItemType> newChainPtr = headPtr; 
@@ -34,7 +39,11 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 		while (origChainPtr != nullptr)
 		{
 			ItemType nextItem = origChainPtr->getItem();
+<<<<<<< HEAD
 			unique_ptr<ItemType> newNodePtr {nextItem}
+=======
+			Node<ItemType>* newNodePtr = new Node<ItemType>(nextItem);
+>>>>>>> 2a46b3db71acdf75ec3b3d97e8043475b5725c2c
 			newChainPtr->setNext(newNodePtr);
 			newChainPtr = newChainPtr->getNext();
 			origChainPtr = origChainPtr->getNext();
@@ -46,7 +55,6 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
  
 template<typename ItemType>
 LinkedBag<ItemType>::~LinkedBag() {
-	cout << "Destructor called: " << this;
 	clear();
 } 
 
@@ -62,9 +70,13 @@ int LinkedBag<ItemType>::getCurrentSize() const {
 
 template<typename ItemType>
 bool LinkedBag<ItemType>::add(const ItemType& newEntry) {
+<<<<<<< HEAD
 	unique_ptr<ItemType> nextNodePtr {newEntry};
+=======
+	auto nextNodePtr{make_unique<Node<ItemType>>(newEntry)};
+>>>>>>> 2a46b3db71acdf75ec3b3d97e8043475b5725c2c
 	nextNodePtr->setNext(headPtr);  
-	headPtr = nextNodePtr;
+	headPtr=nextNodePtr.release();
 	itemCount++;
 	return true;
 }
@@ -73,7 +85,7 @@ bool LinkedBag<ItemType>::add(const ItemType& newEntry) {
 template<typename ItemType>
 std::vector<ItemType> LinkedBag<ItemType>::toVector() const {
 	std::vector<ItemType> bagContents;
-	unique_ptr<ItemType> curPtr = make_unique(headPtr);
+	Node<ItemType>* curPtr = headPtr;
 	int counter = 0;
 
 	while ((curPtr != nullptr) && (counter < itemCount)) {
@@ -87,7 +99,7 @@ std::vector<ItemType> LinkedBag<ItemType>::toVector() const {
 
 template<typename ItemType>
 bool LinkedBag<ItemType>::remove(const ItemType& anEntry) {
-	Node<ItemType>* entryNodePtr = getPointerTo(anEntry);
+	auto entryNodePtr = getPointerTo(anEntry);
 	bool canRemoveItem = !isEmpty() && (entryNodePtr != nullptr);
 
 	if (canRemoveItem) {
@@ -123,7 +135,7 @@ template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf(const ItemType& anEntry) const {
 	int frequency = 0;
 	int counter = 0;
-	unique_ptr<ItemType> curPtr = make_unique(headPtr);
+	Node<ItemType>* curPtr = headPtr;
 
 	while ((curPtr != nullptr) && (counter < itemCount)) {
 		if (anEntry == curPtr->getItem()) {
@@ -142,16 +154,16 @@ bool LinkedBag<ItemType>::contains(const ItemType& anEntry) const {
 }
 
 template<typename ItemType>
-Node<ItemType>* LinkedBag<ItemType>::getPointerTo(const ItemType& anEntry) const {
+unique_ptr<Node<ItemType>> LinkedBag<ItemType>::getPointerTo(const ItemType& anEntry) const {
 	bool found = false;
-	unique_ptr<ItemType> curPtr = make_unique(headPtr);
+	auto curPtr{make_unique<Node<ItemType>>(*headPtr)};
 
 	while (!found && (curPtr != nullptr)) {
 		if (anEntry == curPtr->getItem()) {
 			found = true;
 		}
 		else {
-			curPtr = curPtr->getNext();
+			curPtr = make_unique<Node<ItemType>>(*curPtr->getNext());
 		}
 	}
 	return curPtr;
