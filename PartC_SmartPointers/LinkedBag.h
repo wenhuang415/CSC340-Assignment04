@@ -49,5 +49,5 @@ private:
 	int itemCount{ 0 };					// Current count of bag items
 
 	// pointer to the node or the null pointer 
-	Node<ItemType>* getPointerTo(const ItemType&) const;
+	std::unique_ptr<Node<ItemType>> getPointerTo(const ItemType&) const;
 };

@@ -67,6 +67,7 @@ int LinkedBag<ItemType>::getCurrentSize340RecursiveHelper(unique_ptr<Node<ItemTy
     if(cur->getNext()==nullptr) {
         return 1;
     } else {
+    //return 1 + recursive call if there is a next node
         return 1 + getCurrentSize340RecursiveHelper(make_unique<Node<ItemType>>(*cur->getNext()));
     }
 }
@@ -74,11 +75,14 @@ int LinkedBag<ItemType>::getCurrentSize340RecursiveHelper(unique_ptr<Node<ItemTy
 //get the current size recursively without a helper
 template<typename ItemType>
 int LinkedBag<ItemType>::getCurrentSize340RecursiveNoHelper() const {
+    //unique pointer to keep track of current node
     static auto cur{make_unique<Node<ItemType>>(*headPtr)};
+    //if next node exists return 1 + recursive call
     if(cur->getNext()!=nullptr) {
         cur=make_unique<Node<ItemType>>(*cur->getNext());
         return 1 + getCurrentSize340RecursiveNoHelper();
     } else {
+        //base case no next node just return 1
         return 1;
     }
 }
@@ -97,9 +101,11 @@ int LinkedBag<ItemType>::getFrequencyOf340RecursiveHelper(shared_ptr<Node<ItemTy
     if(cur->getNext()==nullptr) {
         return (cur->getItem()==entry) ? 1 : 0;
     }else{
+        //if entry matches return 1 + recursive call
         if(cur->getItem()==entry) {
             return 1 + getFrequencyOf340RecursiveHelper(make_shared<Node<ItemType>>(*cur->getNext()),entry);
         } else{
+            //return recursive call if entry doesn't match
             return getFrequencyOf340RecursiveHelper(make_shared<Node<ItemType>>(*cur->getNext()),entry);
         }
     }
@@ -110,14 +116,18 @@ template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf340RecursiveNoHelper(const ItemType& entry) const {
     //create a static node pointer to iterate through nodes in recursion
     static auto cur{make_unique<Node<ItemType>>(*headPtr)};
+    //static int to keep track of count
     static int count = 0;
+    //base case reached, no more next node, return count
     if (cur == nullptr) {
         return count;
     }
     else {
+        //if there's a next node and item matches entry then count++
         if (entry == cur->getItem()) {
             count++;
         }
+        //set the current node to the next and recursive call on it
         if(cur->getNext()!=nullptr) {
             cur = make_unique<Node<ItemType>>(*cur->getNext());
             getFrequencyOf340RecursiveNoHelper(entry);
