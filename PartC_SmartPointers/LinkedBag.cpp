@@ -62,13 +62,13 @@ int LinkedBag<ItemType>::getCurrentSize() const {
 
 template<typename ItemType>
 bool LinkedBag<ItemType>::add(const ItemType& newEntry) {
-	unique_ptr<ItemType> nextNodePtr;
-	nextNodePtr->setItem(newEntry);
+	unique_ptr<ItemType> nextNodePtr {newEntry};
 	nextNodePtr->setNext(headPtr);  
 	headPtr = nextNodePtr;
 	itemCount++;
 	return true;
 }
+
 
 template<typename ItemType>
 std::vector<ItemType> LinkedBag<ItemType>::toVector() const {
