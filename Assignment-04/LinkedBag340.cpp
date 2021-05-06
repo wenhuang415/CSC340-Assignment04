@@ -40,7 +40,6 @@ bool LinkedBag<ItemType>::addEnd340(const ItemType& newEntry){
 //gets the current size of the bag iteratively
 template<typename ItemType>
 int LinkedBag<ItemType>::getCurrentSize340Iterative() const {
-    
     int count = 1;
     Node<ItemType>* cur = headPtr;
     //if head is null return 0 because bag is empty
@@ -67,6 +66,7 @@ int LinkedBag<ItemType>::getCurrentSize340RecursiveHelper(Node<ItemType>* cur) c
     if(cur->getNext()==nullptr) {
         return 1;
     } else {
+        //recursive call for the next node if it exists
         return 1 + getCurrentSize340RecursiveHelper(cur->getNext());
     }
 }
@@ -74,11 +74,14 @@ int LinkedBag<ItemType>::getCurrentSize340RecursiveHelper(Node<ItemType>* cur) c
 //get the current size recursively without a helper
 template<typename ItemType>
 int LinkedBag<ItemType>::getCurrentSize340RecursiveNoHelper() const {
+    //static node pointer to keep track of current node in recursive call
     static Node<ItemType>* cur = headPtr;
     if(cur->getNext()!=nullptr) {
+        //if next node exists do recursive call on it
         cur=cur->getNext();
         return 1 + getCurrentSize340RecursiveNoHelper();
     } else {
+        //base case to return 1 if there is no next node
         return 1;
     }
 
@@ -94,13 +97,17 @@ int LinkedBag<ItemType>::getFrequencyOf340Recursive(const ItemType& entry) const
 //helper for getFrequencyOf340()
 template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf340RecursiveHelper(Node<ItemType>* cur, const ItemType& entry) const {
-    //base case if last item matches entry
+    //base case if there is no next node
     if(cur->getNext()==nullptr) {
+        //check if item matches entry, return 1 if it does 0 otherwise
        return (cur->getItem()==entry) ? 1 : 0;
     } else {
+        //recursive call if there is a next node
         if(cur->getItem()==entry) {
+            //return 1 + recursive call if entry matches
             return 1+getFrequencyOf340RecursiveHelper(cur->getNext(),entry);
         } else {
+            //just recusive call next node if entry doesn't match
             return getFrequencyOf340RecursiveHelper(cur->getNext(),entry);
         }
     }
@@ -111,14 +118,18 @@ template<typename ItemType>
 int LinkedBag<ItemType>::getFrequencyOf340RecursiveNoHelper(const ItemType& entry) const {
     //create a static node pointer to iterate through nodes in recursion
     static Node<ItemType>* cur;
+    //static int to keep track of the count
     static int count = 0;
+    //base case reached, return count
     if (cur == nullptr) {
         return count;
     }
     else {
+        //if entry matches, count++, set current node to the next one
         if (entry == cur->getItem()) {
             count++;
         }
+        //if next node exists recursive call on it
         if(cur->getNext()!=nullptr) {
             cur = cur->getNext();
             getFrequencyOf340RecursiveNoHelper(entry);
