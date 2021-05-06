@@ -25,10 +25,10 @@ LinkedBag<ItemType>::LinkedBag(const LinkedBag<ItemType>& aBag) {
 		headPtr = nullptr; 
 	}
 	else {
-		weak_ptr<ItemType> headptr;
-		headPtr->setItem(origChainPtr->getItem());
+		shared_ptr<ItemType> headptr {headPtr->setItem(origChainPtr->getItem())};
+		
 
-		Node<ItemType>* newChainPtr = headPtr; 
+		shared_ptr<ItemType> newChainPtr = headPtr; 
 		origChainPtr = origChainPtr->getNext();
 
 		while (origChainPtr != nullptr)
